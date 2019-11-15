@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <bean id="demoFacade" class="com.luohao.server"/>
+
+
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="${dubbo.application.name}" owner="${dubbo.application.owner}"/>
+
+    <!-- 使用zookeeper注册中心暴露服务地址 register=false 代表服务不注册到注册中心,方便本机调试 -->
+    <dubbo:registry id="dubbo" address="${dubbo.registry.address}" register="false"/>
+
+    <!-- 用dubbo协议在20880端口暴露服务 -->
+    <dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" threads="${dubbo.protocol.threads}"/>
+
+    <!-- 声明需要暴露的服务接口 -->
+    <dubbo:service ref="demoFacade" interface="com.luohao.inter.DemoInterface"
+                   registry="dubbo" group="${dubbo.service.group}" version="${dubbo.service.version}"
+                   retries="0" timeout="15000"/>
+</beans>

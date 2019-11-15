@@ -1,0 +1,211 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.luohao.dubbo</groupId>
+    <artifactId>dubbo-demo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>duubo-server</module>
+        <module>dubbo-common</module>
+    </modules>
+    <packaging>pom</packaging>
+
+    <name>dubbo-demo</name>
+    <url>http://maven.apache.org</url>
+
+    <!--版本配置-->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <my.common.version>1.0.0-SNAPSHOT</my.common.version>
+
+        <junit.version>4.9</junit.version>
+        <spring-test.version>3.1.1.RELEASE</spring-test.version>
+        <common-codec.version>1.6</common-codec.version>
+
+        <hession.version>4.0.38</hession.version>
+
+        <!--dubbo -->
+        <zookeeper.version>3.4.8</zookeeper.version>
+        <dubbo.version>2.5.3</dubbo.version>
+        <zkclient.version>0.9</zkclient.version>
+        <hessian.version>4.0.38</hessian.version>
+        <jetty.version>6.1.26</jetty.version>
+        <javatuples.version>1.2</javatuples.version>
+    </properties>
+
+    <!--依赖配置-->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-test</artifactId>
+                <version>${spring-test.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${common-codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.caucho</groupId>
+                <artifactId>hessian</artifactId>
+                <version>${hession.version}</version>
+            </dependency>
+
+            <!-- dubbo start -->
+
+            <dependency>
+                <groupId>org.apache.zookeeper</groupId>
+                <artifactId>zookeeper</artifactId>
+                <version>${zookeeper.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.101tec</groupId>
+                <artifactId>zkclient</artifactId>
+                <version>${zkclient.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>dubbo</artifactId>
+                <version>${dubbo.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.caucho</groupId>
+                <artifactId>hessian</artifactId>
+                <version>${hessian.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty</artifactId>
+                <version>${jetty.version}</version>
+            </dependency>
+
+            <!-- dubbo end -->
+
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- profile 环境配置-->
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <env.name>dev</env.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <env.name>test</env.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>pro</id>
+            <properties>
+                <env.name>pro</env.name>
+            </properties>
+        </profile>
+    </profiles>
+
+
+    <build>
+
+        <filters>
+            <filter>../src/filters/${env.name}/dubbo.properties</filter>
+        </filters>
+
+        <resources>
+            <!-- 保证所有的resources下的配置文件能被编译打包 -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                <filtering>false</filtering>
+            </resource>
+            <!-- 保证resources下的所有的properties配置文件可以被过滤-->
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.xml</include>
+                </includes>
+                <excludes>
+                    <exclude>**/spring/**</exclude>
+                </excludes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <!-- 插件管理 -->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <encoding>UTF8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-archetype-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <warName>${project.build.finalName}</warName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.8</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <testFailureIgnore>true</testFailureIgnore>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+
+
+
+</project>
