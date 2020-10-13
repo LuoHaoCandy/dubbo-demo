@@ -19,7 +19,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <my.common.version>1.0.0-SNAPSHOT</my.common.version>
 
-        <junit.version>4.9</junit.version>
+        <junit.version>4.13.1</junit.version>
         <spring-test.version>3.1.1.RELEASE</spring-test.version>
         <common-codec.version>1.6</common-codec.version>
 
